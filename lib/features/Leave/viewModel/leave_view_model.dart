@@ -297,27 +297,31 @@ class LeaveViewModel extends BaseViewModel {
   }
 
   // MARK: - FORM VALIDATION METHODS
-  bool validateForm(BuildContext context, bool isCompOff) {
+  bool validateForm(BuildContext context, LeaveFormType leaveFormType) {
     if (selectedStartDate == null) {
       showError(context, 'Please select the date.');
       return false;
     }
-    if (!isCompOff) {
+    if (leaveFormType == LeaveFormType.leave) {
       if (selectedLeaveType == '' || selectedLeaveType == null) {
         showError(context, 'Leave type is necessary!');
         return false;
       }
+    }
+    else if (selectedUser?.id == null || selectedUser!.id.isEmpty || selectedUser!.id == userId) {
+      showError(context, 'On behalf is necessary!');
+      return false;
     }
     return true;
   }
 
   // MARK: - SUBMIT LEAVE FORM METHOD
   Future<void> submitLeaveForm(
-    BuildContext context,
-    FocusNode reasonFocusNode, {
-    bool isCompOff = false,
-  }) async {
-    if (!validateForm(context, isCompOff)) {
+      BuildContext context,
+      FocusNode reasonFocusNode, {
+        LeaveFormType leaveFormType = LeaveFormType.leave,
+      }) async {
+    if (!validateForm(context, leaveFormType)) {
       return;
     }
 
@@ -336,7 +340,7 @@ class LeaveViewModel extends BaseViewModel {
         return;
       }
 
-      final request = await _createLeaveRequest(userId, isCompOff);
+      final request = await _createLeaveRequest(userId, leaveFormType);
 
       // Submit the request
       final success = await submitLeaveRequest(request);
@@ -380,9 +384,9 @@ class LeaveViewModel extends BaseViewModel {
 
   // MARK: - CREATE LEAVE REQUEST METHOD
   Future<ApplyLeaveRequestModel> _createLeaveRequest(
-    String userId,
-    bool isCompOff,
-  ) async {
+      String userId,
+      LeaveFormType leaveFormType,
+      ) async {
     final adjustedRange = getAdjustedDateRange();
     List<String> compOffDateStrings = selectedCompOffDates.map((date) {
       final adjustedDate = DateTime(
@@ -409,32 +413,32 @@ class LeaveViewModel extends BaseViewModel {
 
     final request = selectedUser != null
         ? ApplyLeaveRequestModel(
-            userId: _selectedUser!.id,
-            requestedBy: userId,
-            type: isCompOff ? 'EXTRA' : 'LEAVE',
-            subType: selectedLeaveType ?? 'GENERAL',
-            fromDate: adjustedRange['from']!.toUtc().toIso8601String(),
-            toDate: adjustedRange['to']!.toUtc().toIso8601String(),
-            reason: reasonController.text.trim(),
-            isCompOff: hasCompOffPlans,
-            isHalfDay: isLeaveHalfDay,
-            compDates: compOffDateStrings,
-            documents: documents,
-            category: _selectedLeaveCategory,
-          )
+      userId: _selectedUser!.id,
+      requestedBy: userId,
+      type: leaveFormType.name.toUpperCase(),
+      subType: selectedLeaveType ?? 'GENERAL',
+      fromDate: adjustedRange['from']!.toUtc().toIso8601String(),
+      toDate: adjustedRange['to']!.toUtc().toIso8601String(),
+      reason: reasonController.text.trim(),
+      isCompOff: hasCompOffPlans,
+      isHalfDay: isLeaveHalfDay,
+      compDates: compOffDateStrings,
+      documents: documents,
+      category: _selectedLeaveCategory,
+    )
         : ApplyLeaveRequestModel(
-            userId: userId,
-            requestedBy: userId,
-            type: isCompOff ? 'EXTRA' : 'LEAVE',
-            subType: selectedLeaveType ?? 'GENERAL',
-            fromDate: adjustedRange['from']!.toUtc().toIso8601String(),
-            toDate: adjustedRange['to']!.toUtc().toIso8601String(),
-            reason: reasonController.text.trim(),
-            isCompOff: hasCompOffPlans,
-            isHalfDay: isLeaveHalfDay,
-            compDates: compOffDateStrings,
-            documents: documents,
-          );
+      userId: userId,
+      requestedBy: userId,
+      type: leaveFormType.name.toUpperCase(),
+      subType: selectedLeaveType ?? 'GENERAL',
+      fromDate: adjustedRange['from']!.toUtc().toIso8601String(),
+      toDate: adjustedRange['to']!.toUtc().toIso8601String(),
+      reason: reasonController.text.trim(),
+      isCompOff: hasCompOffPlans,
+      isHalfDay: isLeaveHalfDay,
+      compDates: compOffDateStrings,
+      documents: documents,
+    );
     return request;
   }
 

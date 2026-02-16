@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:leavify/core/utils/constants/enums/enums.dart';
 import 'package:leavify/core/utils/formatters/date/date_formatter.dart';
 import 'package:leavify/features/Authentication/domain/models/leave.dart';
 
@@ -25,7 +26,7 @@ class LeaveCard extends StatelessWidget {
     /* ================= PRIORITY LOGIC ================= */
 
     // Comp-Off has highest priority
-    final bool isCompOff = leave.requestType.toLowerCase() == 'extra';
+    final bool isCompOff = leave.requestType.toLowerCase() != LeaveFormType.leave.toString();
 
     // Half-day applies only if NOT comp-off
     final bool isHalfDay = leave.isHalfDay == true;

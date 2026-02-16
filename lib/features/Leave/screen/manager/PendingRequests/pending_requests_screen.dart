@@ -64,8 +64,11 @@ class _PendingRequestsScreenState extends State<PendingRequestsScreen> {
         case 'escalated':
           matchesFilter = isHR ? r.escalated == true : status == 'escalated';
           break;
-        case 'comp off':
+        case 'extra':
           matchesFilter = r.requestType.toLowerCase() == 'extra';
+          break;
+        case 'wfh':
+          matchesFilter = r.requestType.toLowerCase() == 'wfh';
           break;
 
         case 'half day':

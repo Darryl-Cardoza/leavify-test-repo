@@ -2,6 +2,7 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:leavify/core/utils/constants/api_endpoints.dart';
+import 'package:leavify/core/utils/constants/enums/enums.dart';
 import 'package:leavify/core/utils/constants/status_color/status_colors.dart';
 import 'package:leavify/core/utils/formatters/date/date_formatter.dart';
 import 'package:leavify/features/Authentication/domain/response/get_all_response.dart';
@@ -30,7 +31,7 @@ class PendingRequestCard extends StatelessWidget {
 
     /* ================= LEFT ACCENT PRIORITY ================= */
 
-    final bool isCompOff = request.requestType.toLowerCase() == 'extra';
+    final bool isCompOff = request.requestType.toLowerCase() != LeaveFormType.leave.toString();
     final bool isHalfDay = request.isHalfDay == true;
 
     Color? leftAccentColor;

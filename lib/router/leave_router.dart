@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:leavify/core/utils/constants/enums/enums.dart';
 import 'package:leavify/features/Authentication/domain/response/get_all_response.dart';
 import 'package:leavify/features/Home/viewmodel/home_view_model.dart';
 import 'package:leavify/features/Leave/components/manager/pending_request_detail_screen.dart';
@@ -100,8 +101,8 @@ class LeaveRouter {
                           if (leave == null) return const SizedBox.shrink();
 
                           // EXTRA (Comp-Off) → no edit allowed
-                          if (leave.leaveDetails.type.toUpperCase() ==
-                              'EXTRA') {
+                          if (leave.leaveDetails.type.toLowerCase() !=
+                              LeaveFormType.leave.toString()) {
                             return const SizedBox.shrink();
                           }
 

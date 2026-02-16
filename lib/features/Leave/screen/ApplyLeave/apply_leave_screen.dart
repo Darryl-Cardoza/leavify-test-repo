@@ -69,10 +69,10 @@ class _ApplyLeaveScreenState extends State<ApplyLeaveScreen>
 
     // 2. Re-initialize Controller if the role/tab count changed
     if (_isEmployee != isEmployee ||
-        _tabController.length != (isEmployee ? 1 : 2)) {
+        _tabController.length != (isEmployee ? 1 : 3)) {
       _isEmployee = isEmployee;
       _tabController.dispose();
-      _tabController = TabController(length: isEmployee ? 1 : 2, vsync: this);
+      _tabController = TabController(length: isEmployee ? 1 : 3, vsync: this);
       _tabController.addListener(_handleTabSelection);
     }
   }
@@ -185,17 +185,24 @@ class _ApplyLeaveScreenState extends State<ApplyLeaveScreen>
                             context,
                             leaveViewModel,
                             homeViewModel,
-                            isCompOff: false,
+                            formType: LeaveFormType.leave,
                           ),
 
-                          // Tab 2: Comp Off (Only present if NOT Employee)
-                          if (!isEmployee)
+                          // Tab 2 : EXTRA and 3: WFH (Only present if NOT Employee)
+                          if(!isEmployee)...[
                             _buildScrollableForm(
                               context,
                               leaveViewModel,
                               homeViewModel,
-                              isCompOff: true,
+                              formType: LeaveFormType.extra,
                             ),
+                            _buildScrollableForm(
+                              context,
+                              leaveViewModel,
+                              homeViewModel,
+                              formType: LeaveFormType.workFromHome,
+                            )
+                          ],
                         ],
                       );
                     },
@@ -262,8 +269,9 @@ class _ApplyLeaveScreenState extends State<ApplyLeaveScreen>
         unselectedLabelColor: Colors.grey.shade600,
         labelStyle: const TextStyle(fontWeight: FontWeight.bold, fontSize: 14),
         tabs: const [
-          Tab(text: "Apply Leave"),
-          Tab(text: "Comp Off"),
+          Tab(text: "Leave"),
+          Tab(text: "Extra"),
+          Tab(text: "WFH")
         ],
       ),
     );
@@ -271,11 +279,11 @@ class _ApplyLeaveScreenState extends State<ApplyLeaveScreen>
 
   // MARK: - SCROLLABLE FORM CONTENT
   Widget _buildScrollableForm(
-    BuildContext context,
-    LeaveViewModel leaveViewModel,
-    HomeViewModel homeViewModel, {
-    required bool isCompOff,
-  }) {
+      BuildContext context,
+      LeaveViewModel leaveViewModel,
+      HomeViewModel homeViewModel, {
+        required LeaveFormType formType,
+      }) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
 
     return SingleChildScrollView(
@@ -287,12 +295,12 @@ class _ApplyLeaveScreenState extends State<ApplyLeaveScreen>
           const SizedBox(height: 24),
 
           // Show Half Day checkbox only for Normal Leaves (Tab 1)
-          // You can decide if Comp Off also supports Half Day logic here
+          // You can decide if Extra also supports Half Day logic here
           _buildHalfDayCheckbox(leaveViewModel),
           const SizedBox(height: 24),
 
-          // Only show basic leave types if NOT Comp Off
-          if (!isCompOff) ...[
+          // Only show basic leave types if is it LEAVE
+          if (formType == LeaveFormType.leave) ...[
             _buildLeaveTypeSection(leaveViewModel),
             const SizedBox(height: 24),
           ],
@@ -313,12 +321,12 @@ class _ApplyLeaveScreenState extends State<ApplyLeaveScreen>
             _buildRequestedForToggle(leaveViewModel, isDark),
 
             // Only show category dropdown if user selected AND not comp off
-            if (!isCompOff)
+            if (formType == LeaveFormType.leave)
               _buildLeaveTypeDropdownSection(leaveViewModel, homeViewModel),
           ],
 
           const SizedBox(height: 32),
-          _buildSubmitButton(leaveViewModel, isCompOff),
+          _buildSubmitButton(leaveViewModel, formType),
           const SizedBox(height: 20), // Bottom padding
         ],
       ),
@@ -652,18 +660,38 @@ class _ApplyLeaveScreenState extends State<ApplyLeaveScreen>
     );
   }
 
-  Widget _buildSubmitButton(LeaveViewModel leaveViewModel, bool isCompOff) {
+  Widget _buildSubmitButton(LeaveViewModel leaveViewModel, LeaveFormType leaveFormType) {
+    String label;
+    String icon;
+
+    switch (leaveFormType) {
+      case LeaveFormType.leave:
+        label = 'Apply Leave';
+        icon = '🚀';
+        break;
+
+      case LeaveFormType.extra:
+        label = 'Apply Extra';
+        icon = '🎯';
+        break;
+
+      case LeaveFormType.workFromHome:
+        label = 'Apply WFH';
+        icon = '🏠';
+        break;
+    }
+
     return SizedBox(
       width: double.infinity,
       child: MyAppButton(
-        label: isCompOff ? 'Apply Comp Off' : 'Apply Leave',
+        label: label,
         onPressed: () {
           reasonFocusNode.unfocus();
           // Submit the form
           leaveViewModel.submitLeaveForm(
             context,
             reasonFocusNode,
-            isCompOff: isCompOff,
+            leaveFormType: leaveFormType,
           );
         },
         isLoading: leaveViewModel.isLoading,
@@ -675,7 +703,7 @@ class _ApplyLeaveScreenState extends State<ApplyLeaveScreen>
           end: Alignment.centerRight,
         ),
         icon: Text(
-          isCompOff ? '🎯' : '🚀',
+          icon,
           style: const TextStyle(fontSize: 16),
         ),
       ),

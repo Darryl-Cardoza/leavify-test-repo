@@ -55,7 +55,7 @@ class _PendingRequestDetailScreenState
     final leaveDetails = viewModel.selectedLeaveById;
     if (leaveDetails != null &&
         leaveDetails.teamConflictingLeaves.isNotEmpty &&
-        leaveDetails.leaveDetails.type.toLowerCase() != 'extra') {
+        leaveDetails.leaveDetails.type.toLowerCase() == LeaveFormType.leave.toString()) {
       _showConflictDialog(leaveDetails.teamConflictingLeaves);
     }
   }
@@ -127,7 +127,7 @@ class _PendingRequestDetailScreenState
           _LeaveRequestDetailsCard(leaveData: leaveData),
           const SizedBox(height: 16),
 
-          if (leaveData.leaveDetails.type.toLowerCase() != 'extra') ...[
+          if (leaveData.leaveDetails.type.toLowerCase() == LeaveFormType.leave.toString()) ...[
             _TeamConflictingLeavesList(
               teamLeaves: leaveData.teamConflictingLeaves,
             ),
@@ -589,10 +589,10 @@ class _LeaveRequestDetailsCard extends StatelessWidget {
     return _InfoCard(
       title: 'Request Details',
       children: [
-        if (leaveData.leaveDetails.type.toLowerCase() == 'extra') ...[
+        if (leaveData.leaveDetails.type.toLowerCase() != LeaveFormType.leave.toString()) ...[
           _InfoRow(
             icon: Icons.more_time_rounded,
-            label: 'Comp Off',
+            label: 'Comp Off', //TODO Need to discuss
             value: leaveData.leaveDetails.type,
           ),
         ],

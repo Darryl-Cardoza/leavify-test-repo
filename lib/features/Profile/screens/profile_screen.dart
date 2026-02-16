@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:leavify/core/utils/constants/api_endpoints.dart';
+import 'package:leavify/core/utils/constants/enums/enums.dart';
 import 'package:leavify/core/utils/constants/status_color/status_colors.dart';
 import 'package:leavify/core/utils/formatters/date/date_formatter.dart';
 import 'package:leavify/features/Authentication/domain/models/user.dart';
@@ -460,8 +461,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
     final String statusUpper = leave.status.toUpperCase();
     final Color statusColor = StatusColors.fromStatus(leave.status);
 
-    // Logic refactor: check if type is 'extra' for Comp Off
-    final bool isCompOff = leave.type.toLowerCase() == 'extra';
+    // Logic refactor: check if type is not 'leave'
+    final bool isCompOff = leave.type.toLowerCase() != LeaveFormType.leave.toString();
 
     // Determine dynamic border color and width
     Color borderColor = theme.colorScheme.onSurface.withOpacity(0.09);

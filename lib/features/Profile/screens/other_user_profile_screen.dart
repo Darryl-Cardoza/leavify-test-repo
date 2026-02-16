@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:leavify/core/utils/constants/api_endpoints.dart';
+import 'package:leavify/core/utils/constants/enums/enums.dart';
 import 'package:leavify/core/utils/constants/status_color/status_colors.dart';
 import 'package:leavify/features/Authentication/domain/models/user.dart';
 import 'package:leavify/features/Authentication/domain/response/get_user_summary_response.dart';
@@ -304,7 +305,7 @@ class _OtherUserProfileScreenState extends State<OtherUserProfileScreen> {
   Widget _buildLeaveCard(MyLeaves leave, ThemeData theme) {
     final statusColor = StatusColors.fromStatus(leave.status);
 
-    final bool isCompOff = leave.type.toLowerCase() == 'extra';
+    final bool isCompOff = leave.type.toLowerCase() != LeaveFormType.leave.toString();
     final bool isHalfDay = leave.isHalfDay == true;
 
     Color? leftBorder;
