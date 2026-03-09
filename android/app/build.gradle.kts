@@ -45,14 +45,6 @@ android {
         }
     }
 
-    buildTypes {
-        release {
-            if (keystoreFile.exists()) {
-                signingConfig = signingConfigs.getByName("release")
-            }
-        }
-    }
-
     defaultConfig {
         // TODO: Specify your own unique Application ID (https://developer.android.com/studio/build/application-id.html).
         applicationId = "com.ritetechnologies.leavify"
@@ -66,13 +58,19 @@ android {
     }
 
     buildTypes {
+
         getByName("debug") {
             signingConfig = signingConfigs.getByName("debug")
         }
+
         getByName("release") {
             isMinifyEnabled = true
             isShrinkResources = true
-            signingConfig = signingConfigs.getByName("release")
+
+            if (keystoreFile.exists()) {
+                signingConfig = signingConfigs.getByName("release")
+            }
+
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
