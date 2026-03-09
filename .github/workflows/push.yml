@@ -59,6 +59,9 @@ jobs:
 
       build_ios: ${{ vars.BUILD_IOS == 'true' }}
 
+      android_runner: macos-latest  #options are ubuntu-latest and macos-latest
+      ios_runner: macos-latest
+
       package_name: com.devops.test
       ios_bundle_id: app.devops.test
 
