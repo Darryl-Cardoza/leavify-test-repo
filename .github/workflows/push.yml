@@ -45,6 +45,7 @@ jobs:
     needs: extract-version
     uses: Rite-Technologies-23/ops-rite-flutter-cicd/.github/workflows/push.yml@main
 
+
     with:
       flutter_version: ${{ vars.FLUTTER_VERSION }}
       flutter_channel: ${{ vars.FLUTTER_CHANNEL }}
