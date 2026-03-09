@@ -54,15 +54,6 @@ android {
     }
 }
 
-    buildTypes {
-        release {
-            if (keystoreFile.exists()) {
-                signingConfig = signingConfigs.getByName("release")
-            }
-        }
-    }
-}
-
     defaultConfig {
         // TODO: Specify your own unique Application ID (https://developer.android.com/studio/build/application-id.html).
         applicationId = "com.ritetechnologies.leavify"
