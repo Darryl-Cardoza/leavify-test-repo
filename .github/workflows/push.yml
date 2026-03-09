@@ -50,6 +50,7 @@ jobs:
       flutter_channel: ${{ vars.FLUTTER_CHANNEL }}
       coverage_threshold: ${{ vars.COVERAGE_THRESHOLD }}
 
+
       # Control tests execution
       run_tests: false  #boolean value
 
