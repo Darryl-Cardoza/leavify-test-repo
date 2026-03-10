@@ -84,6 +84,9 @@ jobs:
       # GitHub Release version
       version: ${{ needs.extract-version.outputs.version }}
 
+      flutter_version: ${{ vars.FLUTTER_VERSION }}
+      flutter_channel: ${{ vars.FLUTTER_CHANNEL }}
+
       # Cloud / Infra
       deploy_to_cloud: false
       enable_aws: false
