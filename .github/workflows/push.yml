@@ -92,13 +92,13 @@ jobs:
       enable_aws: false
 
       # Play Store (Android)
-      deploy_to_playstore: true
+      deploy_to_playstore: false
       playstore_track: internal
       playstore_status: completed
       package_name: com.ritetechnologies.leavify
 
       # iOS / TestFlight
-      deploy_to_testflight: false
+      deploy_to_testflight: true
       ios_bundle_id: com.ritetechnologies.leavify
 
       build_number: ${{ github.run_number }}
