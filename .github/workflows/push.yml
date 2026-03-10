@@ -110,6 +110,9 @@ jobs:
       esper_org_id: ${{ vars.ESPER_ORG_ID }}
       esper_app_id: ${{ vars.ESPER_APP_ID }}
 
+      android_runner: macos-latest  #options are ubuntu-latest and macos-latest
+      ios_runner: macos-latest
+
 
     secrets:
       ANDROID_KEYSTORE: ${{ secrets.ANDROID_KEYSTORE }}
