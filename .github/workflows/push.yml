@@ -102,7 +102,7 @@ jobs:
       ios_bundle_id: com.ritetechnologies.leavify
 
       build_number: ${{ github.run_number }}
-      enable_whats_new: true
+      enable_whats_new: false
       whats_new_file: release_notes/${{ needs.extract-version.outputs.version }}.txt
 
       # Esper
